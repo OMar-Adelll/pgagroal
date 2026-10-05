@@ -158,7 +158,7 @@ pgagroal_check_io_uring_enabled(bool tls, int* ev_backend)
 
    if (ev_backend != NULL && *ev_backend == PGAGROAL_EVENT_BACKEND_IO_URING)
    {
-      /* Check if io_uring is enabled or works for supported configuration, else fallback to next backend */
+      /* Check if io_uring is enabled or supported by kernel/configuration */
       fd = open("/proc/sys/kernel/io_uring_disabled", O_RDONLY);
       if (fd < 0)
       {
@@ -177,6 +177,7 @@ pgagroal_check_io_uring_enabled(bool tls, int* ev_backend)
       }
 
       /* See doc: https://docs.kernel.org/admin-guide/sysctl/kernel.html#io-uring-disabled */
+      /* Check sysctl setting and TLS restrictions */
       if (tls || (rval == '1') || (rval == '2'))
       {
          if (tls)
